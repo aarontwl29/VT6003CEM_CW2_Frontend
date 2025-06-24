@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Input, Button, Form, message, Checkbox, Select } from "antd";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { api } from "../components/common/http-common";
 import type { ValidateErrorEntity } from "rc-field-form/lib/interface";
 
-// Define the type for form values
 interface RegisterFormValues {
-  firstname?: string; // Optional input
-  lastname?: string; // Optional input
+  firstname?: string;
+  lastname?: string;
   username: string;
   about?: string;
   email: string;
@@ -16,13 +15,13 @@ interface RegisterFormValues {
   confirmPassword: string;
   isStaff?: boolean;
   signupCode?: string;
-  staffRole?: string; // New field for staff role
+  staffRole?: string;
 }
 
 const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [isStaff, setIsStaff] = useState(false); // State to toggle staff input visibility
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [isStaff, setIsStaff] = useState(false);
+  const navigate = useNavigate();
 
   const onFinish = async (values: RegisterFormValues) => {
     setLoading(true);
@@ -33,24 +32,22 @@ const Register: React.FC = () => {
       }
 
       if (values.isStaff) {
-        // Call staff registration API
-        const response = await axios.post("STAFF_API_PLACEHOLDER_URL", {
+        const response = await axios.post(`${api.uri}/users/staff/register`, {
           username: values.username,
           about: values.about,
           email: values.email,
           password: values.password,
           signupCode: values.signupCode,
-          staffRole: values.staffRole, // Include staff role
+          staffRole: values.staffRole,
         });
 
         if (response.status === 200 || response.status === 201) {
           message.success("Staff registered successfully!");
-          navigate(-1); // Redirect to the previous page
+          navigate(-1);
         } else {
           message.error("Staff registration failed. Please try again.");
         }
       } else {
-        // Call public user registration API
         const response = await axios.post(`${api.uri}/users/public/register`, {
           username: values.username,
           about: values.about,
@@ -60,7 +57,7 @@ const Register: React.FC = () => {
 
         if (response.status === 200 || response.status === 201) {
           message.success("User registered successfully!");
-          navigate(-1); // Redirect to the previous page
+          navigate(-1);
         } else {
           message.error("User registration failed. Please try again.");
         }
@@ -153,11 +150,8 @@ const Register: React.FC = () => {
           <Input.Password placeholder="Confirm your password" />
         </Form.Item>
 
-        <Form.Item>
-          <Checkbox
-            checked={isStaff}
-            onChange={(e) => setIsStaff(e.target.checked)}
-          >
+        <Form.Item name="isStaff" valuePropName="checked">
+          <Checkbox onChange={(e) => setIsStaff(e.target.checked)}>
             Are you a staff member?
           </Checkbox>
         </Form.Item>
