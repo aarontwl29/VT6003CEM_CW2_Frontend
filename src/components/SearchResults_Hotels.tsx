@@ -1,9 +1,9 @@
-// filepath: /Users/aaron/Desktop/VT6003CEM_CW2/VT6003CEM_CW2_Frontend/src/components/SearchResults_Hotels.tsx
 import React, { useState, useEffect } from "react";
 import { List, Spin } from "antd";
+import { useNavigate } from "react-router-dom";
 import { searchHotels } from "../services/hotelService";
 
-interface SearchResultsProps {
+export interface SearchResultsProps {
   searchParams: {
     country: string;
     city: string;
@@ -14,19 +14,17 @@ interface SearchResultsProps {
   };
 }
 
-// Updated to match the actual API response structure
 interface HotelResult {
-  id?: number;
+  id: number;
   name: string;
   description?: string;
   city?: string;
   country?: string;
   address?: string;
   rating?: string;
-  review_count?: number; // Snake case as returned by API
-  image_url?: string; // Snake case as returned by API
+  review_count?: number;
+  image_url?: string;
   cheapest_room?: {
-    // Snake case as returned by API
     original_price?: string;
     discounted_price?: string;
   };
@@ -37,6 +35,7 @@ const SearchResults_Hotels: React.FC<SearchResultsProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [results, setResults] = useState<HotelResult[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -50,7 +49,7 @@ const SearchResults_Hotels: React.FC<SearchResultsProps> = ({
           personNumber: searchParams.personNumber,
           roomNumber: searchParams.roomNumber,
         });
-        console.log("API Response:", data); // Debugging: Log API response
+        console.log("API Response:", data);
         setResults(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching hotel results:", error);
@@ -63,7 +62,9 @@ const SearchResults_Hotels: React.FC<SearchResultsProps> = ({
     fetchResults();
   }, [searchParams]);
 
-  console.log("Results:", results); // Debugging: Log the results array
+  const handleHotelClick = (hotelId: number) => {
+    navigate(`/hotels/${hotelId}`);
+  };
 
   return (
     <div style={{ marginTop: "20px" }}>
@@ -77,8 +78,8 @@ const SearchResults_Hotels: React.FC<SearchResultsProps> = ({
           bordered
           dataSource={results}
           renderItem={(item) => (
-            <List.Item>
-              <div style={{ width: "100%" }}>
+            <List.Item onClick={() => handleHotelClick(item.id)}>
+              <div style={{ width: "100%", cursor: "pointer" }}>
                 <h3>{item.name || "No Name Available"}</h3>
                 <p>{item.description || "No Description Available"}</p>
                 <p>Address: {item.address || "No Address Available"}</p>

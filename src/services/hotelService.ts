@@ -18,9 +18,9 @@ export const searchHotels = async (filters: {
       personNumber: filters.personNumber,
       roomNumber: filters.roomNumber,
     });
-    return response.data; // Return the search results
+    return response.data;
   } catch (error) {
     console.error("Error searching hotels:", error);
-    throw error; // Propagate the error for handling in the component
+    throw error;
   }
 };

@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Layout, Space } from "antd";
-import SearchBar_Hotels from "./components/SearchBar_Hotels"; // Import the SearchBar component
+import SearchBar_Hotels from "./components/SearchBar_Hotels";
+import HotelDetails from "./components/HotelDetails";
 import "./App.css";
 
 const { Header, Content, Footer } = Layout;
@@ -47,6 +48,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/search-hotels" element={<SearchHotels />} />
+            <Route path="/hotels/:hotelId" element={<HotelDetails />} />
           </Routes>
         </Content>
         <Footer>
