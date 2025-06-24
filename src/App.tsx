@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Layout, Space } from "antd";
 import SearchBar_Hotels from "./components/SearchBar_Hotels";
 import HotelDetails from "./components/HotelDetails";
+import Register from "./components/Register";
 import "./App.css";
 
 const { Header, Content, Footer } = Layout;
@@ -23,7 +24,7 @@ function SearchHotels() {
   return (
     <div>
       <h1>Search Hotels</h1>
-      <SearchBar_Hotels /> {/* Use the SearchBar component */}
+      <SearchBar_Hotels />
     </div>
   );
 }
@@ -39,6 +40,7 @@ function App() {
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/about">About</Link>
               <Link to="/search-hotels">Search Hotels</Link>
+              <Link to="/register">Register</Link>
             </Space>
           </nav>
         </Header>
@@ -49,6 +51,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/search-hotels" element={<SearchHotels />} />
             <Route path="/hotels/:hotelId" element={<HotelDetails />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </Content>
         <Footer>
