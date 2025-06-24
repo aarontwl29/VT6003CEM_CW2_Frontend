@@ -30,8 +30,6 @@ export const login = async (
       password,
     });
 
-    console.log("Login Response:", response.data);
-
     if (response.status === 200) {
       // Store token and user in local storage for persistent auth
       localStorage.setItem("token", response.data.token);
@@ -39,7 +37,6 @@ export const login = async (
 
       // Dispatch custom event to notify app of auth state change
       window.dispatchEvent(new Event(AUTH_STATE_CHANGE_EVENT));
-      console.log("Auth state change event dispatched after login");
     }
 
     return response.data;
@@ -79,7 +76,6 @@ export const logout = (): void => {
 
   // Dispatch custom event to notify app of auth state change
   window.dispatchEvent(new Event(AUTH_STATE_CHANGE_EVENT));
-  console.log("Auth state change event dispatched after logout");
 };
 
 // Function to get the authentication token

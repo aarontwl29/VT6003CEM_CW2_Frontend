@@ -5,12 +5,12 @@ import SearchBar_Hotels from "./components/SearchBar_Hotels";
 import HotelDetails from "./components/HotelDetails";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import { isAuthenticated, logout } from "./services/authService";
+import { isAuthenticated, logout, getUserRole } from "./services/authService";
 import "./App.css";
 
 const { Header, Content, Footer } = Layout;
 
-// Create a custom event for auth state changes
+// Create a custom event for auth state changes, USEFUL !!
 export const AUTH_STATE_CHANGE_EVENT = "authStateChange";
 
 function Home() {
@@ -26,15 +26,50 @@ function SearchHotels() {
   );
 }
 
+// Simple role-specific pages
+function UserDashboard() {
+  return <h1>User Dashboard - Regular user features</h1>;
+}
+
+function StaffDashboard() {
+  return <h1>Staff Dashboard - Common features for operators and admins</h1>;
+}
+
+function AdminPanel() {
+  return <h1>Admin Panel - Admin only features</h1>;
+}
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [lastCheck, setLastCheck] = useState("");
 
-  // Check authentication status when component mounts
+  // Check authentication status and role when component mounts
   useEffect(() => {
-    // Check auth function
+    // Check auth function with throttling to prevent repeated calls with the same data
     function checkAuth() {
       const authenticated = isAuthenticated();
-      setIsLoggedIn(authenticated);
+
+      // Only update if authentication status changes
+      if (authenticated !== isLoggedIn) {
+        setIsLoggedIn(authenticated);
+      }
+
+      // Get user role if authenticated
+      if (authenticated) {
+        const role = getUserRole();
+        const roleKey = `${authenticated}-${role}`;
+
+        // Only update if role changes
+        if (roleKey !== lastCheck) {
+          setUserRole(role);
+          setLastCheck(roleKey);
+        }
+      } else if (userRole !== null) {
+        // Clear role if not authenticated
+        setUserRole(null);
+        setLastCheck("");
+      }
     }
 
     // Initial check
@@ -46,15 +81,15 @@ function App() {
     // Listen for custom auth state change events (for same-tab updates)
     window.addEventListener(AUTH_STATE_CHANGE_EVENT, checkAuth);
 
-    // Poll for auth changes as a fallback
-    const interval = setInterval(checkAuth, 2000);
+    // Poll less frequently (5 seconds instead of 1 second)
+    const interval = setInterval(checkAuth, 5000);
 
     return () => {
       window.removeEventListener("storage", checkAuth);
       window.removeEventListener(AUTH_STATE_CHANGE_EVENT, checkAuth);
       clearInterval(interval);
     };
-  }, []);
+  }, [isLoggedIn, userRole, lastCheck]);
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -62,9 +97,13 @@ function App() {
 
     // Force update the login state
     setIsLoggedIn(false);
+    setUserRole(null);
+    setLastCheck("");
+  };
 
-    // Dispatch custom event for other components
-    window.dispatchEvent(new Event(AUTH_STATE_CHANGE_EVENT));
+  // Helper function to check if user is staff (either operator or admin)
+  const isStaff = () => {
+    return userRole === "operator" || userRole === "admin";
   };
 
   return (
@@ -73,7 +112,7 @@ function App() {
         <Header>
           <nav>
             <Space size="middle">
-              {/* Public links */}
+              {/* Public links - always visible */}
               <Link to="/">Home</Link>
               <Link to="/search-hotels">Search Hotels</Link>
 
@@ -85,11 +124,27 @@ function App() {
                 </>
               )}
 
-              {/* Show logout only when logged in */}
+              {/* User-specific links - only when logged in */}
               {isLoggedIn && (
-                <Link to="/" onClick={handleLogout}>
-                  Logout
-                </Link>
+                <>
+                  {/* Regular user dashboard - visible to all logged in users */}
+                  <Link to="/user-dashboard">My Dashboard</Link>
+
+                  {/* Staff links - visible to operators and admins */}
+                  {isStaff() && (
+                    <Link to="/staff-dashboard">Staff Dashboard</Link>
+                  )}
+
+                  {/* Admin-only links */}
+                  {userRole === "admin" && (
+                    <Link to="/admin-panel">Admin Panel</Link>
+                  )}
+
+                  {/* Logout link */}
+                  <Link to="/" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </>
               )}
             </Space>
           </nav>
@@ -97,11 +152,34 @@ function App() {
 
         <Content style={{ padding: "50px", minHeight: "80vh" }}>
           <Routes>
+            {/* Public routes */}
             <Route index element={<Home />} />
             <Route path="/search-hotels" element={<SearchHotels />} />
             <Route path="/hotels/:hotelId" element={<HotelDetails />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+
+            {/* User routes */}
+            <Route
+              path="/user-dashboard"
+              element={isLoggedIn ? <UserDashboard /> : <Login />}
+            />
+
+            {/* Staff routes (operator and admin) */}
+            <Route
+              path="/staff-dashboard"
+              element={isLoggedIn && isStaff() ? <StaffDashboard /> : <Login />}
+            />
+
+            {/* Admin-only routes */}
+            <Route
+              path="/admin-panel"
+              element={
+                isLoggedIn && userRole === "admin" ? <AdminPanel /> : <Login />
+              }
+            />
+
+            {/* 404 route */}
             <Route path="*" element={<div>Page Not Found</div>} />
           </Routes>
         </Content>
