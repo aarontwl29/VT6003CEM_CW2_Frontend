@@ -63,7 +63,12 @@ const SearchResults_Hotels: React.FC<SearchResultsProps> = ({
   }, [searchParams]);
 
   const handleHotelClick = (hotelId: number) => {
-    navigate(`/hotels/${hotelId}`);
+    navigate(`/hotels/${hotelId}`, {
+      state: {
+        startDate: searchParams.startDate,
+        endDate: searchParams.endDate,
+      },
+    });
   };
 
   return (
