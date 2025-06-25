@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import { Spin, Tag, DatePicker, Button, Input } from "antd";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { Spin, Tag, DatePicker, Button, Input, message } from "antd";
 import axios from "axios";
 import { api } from "../components/common/http-common";
 import dayjs from "dayjs";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons"; // Import heart icons
 import { UserOutlined } from "@ant-design/icons"; // Import person icon
+import { isAuthenticated, getCurrentUser } from "../services/authService";
+import { createBooking } from "../services/hotelService";
 
 interface Room {
   id: number;
@@ -34,13 +36,14 @@ interface Hotel {
 const HotelDetails: React.FC = () => {
   const { hotelId } = useParams<{ hotelId: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const { startDate, endDate } = location.state || {};
   const [loading, setLoading] = useState<boolean>(true);
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRooms, setSelectedRooms] = useState<number[]>([]); // Track selected rooms
-
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
+  const [messageContent, setMessageContent] = useState<string>(""); // State for user message
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
@@ -98,6 +101,70 @@ const HotelDetails: React.FC = () => {
       .reduce((acc, price) => acc + price, 0);
 
     return { totalPrice, originalPrice };
+  };
+
+  const handleReserve = async () => {
+    console.log("Reserve button clicked");
+
+    // Check if the user is authenticated
+    if (!isAuthenticated()) {
+      message.warning("You need to log in to reserve a room.");
+      navigate("/login");
+      return;
+    }
+
+    // Get the current user
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      message.error("Unable to retrieve user information.");
+      return;
+    }
+
+    // Validate inputs
+    if (!startDate || !endDate) {
+      message.error("Please select booking dates.");
+      return;
+    }
+
+    if (!selectedRooms.length) {
+      message.error("Please select at least one room.");
+      return;
+    }
+
+    if (!messageContent.trim()) {
+      message.error("Please leave a message for the staff.");
+      return;
+    }
+
+    // Get the email input value
+    const emailInput = document.querySelector(
+      "input[type='email']"
+    ) as HTMLInputElement;
+    const staffEmail = emailInput?.value.trim() || null;
+
+    console.log("Email input value:", staffEmail); // Debug log for email
+
+    // Prepare booking data
+    const bookingData = {
+      start_date: startDate,
+      end_date: endDate,
+      staff_email: staffEmail, // Pass null if email is empty
+      first_message: messageContent,
+      room_ids: selectedRooms,
+    };
+
+    try {
+      // Call the createBooking function
+      const response = await createBooking(bookingData);
+      console.log("Booking response:", response);
+      message.success("Reservation submitted successfully!");
+
+      // Redirect to the search bar page
+      navigate("/search-hotels");
+    } catch (error) {
+      console.error("Error during reservation:", error);
+      message.error("Failed to submit reservation. Please try again.");
+    }
   };
 
   const { totalPrice, originalPrice } = calculateTotalPrice();
@@ -364,7 +431,7 @@ const HotelDetails: React.FC = () => {
                 ))}
               </div>
 
-              {/* Right Column: Total Price, Email Input & Reserve Button */}
+              {/* Right Column: Total Price, Email Input, Message Box & Reserve Button */}
               <div
                 style={{
                   flex: 1.2, // Reduced width
@@ -404,7 +471,18 @@ const HotelDetails: React.FC = () => {
                   placeholder="Agent Email"
                   style={{ width: "100%" }}
                 />
-                <Button type="primary" style={{ width: "100%" }}>
+                <Input.TextArea
+                  placeholder="Leave a message for the staff"
+                  value={messageContent}
+                  onChange={(e) => setMessageContent(e.target.value)}
+                  rows={4}
+                  style={{ width: "100%" }}
+                />
+                <Button
+                  type="primary"
+                  style={{ width: "100%" }}
+                  onClick={handleReserve}
+                >
                   Reserve
                 </Button>
               </div>
