@@ -140,7 +140,7 @@ const HotelDetails: React.FC = () => {
     const emailInput = document.querySelector(
       "input[type='email']"
     ) as HTMLInputElement;
-    const staffEmail = emailInput?.value.trim() || null;
+    const staffEmail = emailInput?.value.trim() || null; // Always use null for empty email
 
     console.log("Email input value:", staffEmail); // Debug log for email
 

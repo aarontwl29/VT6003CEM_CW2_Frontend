@@ -6,6 +6,8 @@ import HotelDetails from "./components/HotelDetails";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound"; // Import the NotFound component
+import BookingList from "./components/BookingList";
+import TestingPage from "./components/TestingPage";
 import { isAuthenticated, logout, getUserRole } from "./services/authService";
 import "./App.css";
 
@@ -130,18 +132,13 @@ function App() {
                 <>
                   {/* Regular user dashboard - visible to all logged in users */}
                   <Link to="/user-dashboard">My Dashboard</Link>
-
-                  {/* Staff links - visible to operators and admins */}
                   {isStaff() && (
                     <Link to="/staff-dashboard">Staff Dashboard</Link>
                   )}
-
-                  {/* Admin-only links */}
                   {userRole === "admin" && (
                     <Link to="/admin-panel">Admin Panel</Link>
                   )}
-
-                  {/* Logout link */}
+                  <Link to="/booking-list">Booking List</Link>
                   <Link to="/" onClick={handleLogout}>
                     Logout
                   </Link>
@@ -159,19 +156,16 @@ function App() {
             <Route path="/hotels/:hotelId" element={<HotelDetails />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-
             {/* User routes */}
             <Route
               path="/user-dashboard"
               element={isLoggedIn ? <UserDashboard /> : <Login />}
             />
-
             {/* Staff routes (operator and admin) */}
             <Route
               path="/staff-dashboard"
               element={isLoggedIn && isStaff() ? <StaffDashboard /> : <Login />}
             />
-
             {/* Admin-only routes */}
             <Route
               path="/admin-panel"
@@ -179,9 +173,13 @@ function App() {
                 isLoggedIn && userRole === "admin" ? <AdminPanel /> : <Login />
               }
             />
-
+            {/* Booking List route */}
+            <Route path="/booking-list" element={<BookingList />} />
+            {/* Test Bookings route */}
+            <Route path="/test-bookings" element={<TestingPage />} />
             {/* 404 route */}
-            <Route path="*" element={<NotFound />} /> {/* Redirect all undefined routes */}
+            <Route path="*" element={<NotFound />} />{" "}
+            {/* Redirect all undefined routes */}
           </Routes>
         </Content>
 
