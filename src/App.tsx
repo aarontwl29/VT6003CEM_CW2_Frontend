@@ -5,6 +5,7 @@ import SearchBar_Hotels from "./components/SearchBar_Hotels";
 import HotelDetails from "./components/HotelDetails";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import NotFound from "./components/NotFound"; // Import the NotFound component
 import { isAuthenticated, logout, getUserRole } from "./services/authService";
 import "./App.css";
 
@@ -180,7 +181,7 @@ function App() {
             />
 
             {/* 404 route */}
-            <Route path="*" element={<div>Page Not Found</div>} />
+            <Route path="*" element={<NotFound />} /> {/* Redirect all undefined routes */}
           </Routes>
         </Content>
 
