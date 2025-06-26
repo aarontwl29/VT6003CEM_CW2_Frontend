@@ -13,6 +13,7 @@ import UserProfile from "./components/UserProfile";
 import UserProfileEdit from "./components/UserProfileEdit";
 import UsersList from "./components/UsersList";
 import UserDetail from "./components/UserDetail";
+import Messages from "./components/Messages";
 import TestingPage from "./components/TestingPage";
 import { isAuthenticated, logout, getUserRole } from "./services/authService";
 import bannerImage from "./assets/banner.png";
@@ -279,6 +280,14 @@ function App() {
                       My Favorites
                     </Link>
 
+                    {/* Messages - visible to all users */}
+                    <Link
+                      to="/messages"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      Messages
+                    </Link>
+
                     {/* Staff features - only for operators and admins */}
                     {isStaff() && (
                       <>
@@ -350,6 +359,11 @@ function App() {
             <Route
               path="/my-favorites"
               element={isLoggedIn ? <FavoriteHotels /> : <Login />}
+            />
+            {/* Messages - for all logged in users */}
+            <Route
+              path="/messages"
+              element={isLoggedIn ? <Messages /> : <Login />}
             />
             {/* Staff Booking Management route - only for staff */}
             <Route
