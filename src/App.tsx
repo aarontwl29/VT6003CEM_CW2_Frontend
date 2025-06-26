@@ -5,7 +5,7 @@ import SearchBar_Hotels from "./components/SearchBar_Hotels";
 import HotelDetails from "./components/HotelDetails";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import NotFound from "./components/NotFound"; // Import the NotFound component
+import NotFound from "./components/NotFound";
 import BookingList from "./components/BookingList";
 import BookingListUsers from "./components/BookingList_users";
 import FavoriteHotels from "./components/FavoriteHotels";
@@ -20,7 +20,6 @@ import "./App.css";
 
 const { Header, Content, Footer } = Layout;
 
-// Create a custom event for auth state changes, USEFUL !!
 export const AUTH_STATE_CHANGE_EVENT = "authStateChange";
 
 function Home() {
@@ -121,163 +120,6 @@ function SearchHotels() {
     <div>
       <h1>Search Hotels</h1>
       <SearchBar_Hotels />
-    </div>
-  );
-}
-
-// Simple role-specific pages
-function UserDashboard() {
-  return (
-    <div style={{ textAlign: "center", padding: "48px 24px" }}>
-      <h1 style={{ color: "#1890ff", fontSize: "36px", marginBottom: "16px" }}>
-        Welcome to Your Dashboard
-      </h1>
-      <p style={{ fontSize: "18px", color: "#666", marginBottom: "32px" }}>
-        Manage your bookings, favorites, and profile from here
-      </p>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "16px",
-          flexWrap: "wrap",
-        }}
-      >
-        <Link to="/my-bookings">
-          <button
-            style={{
-              backgroundColor: "#1890ff",
-              color: "white",
-              border: "none",
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            My Bookings
-          </button>
-        </Link>
-        <Link to="/my-favorites">
-          <button
-            style={{
-              backgroundColor: "#52c41a",
-              color: "white",
-              border: "none",
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            My Favorites
-          </button>
-        </Link>
-        <Link to="/profile">
-          <button
-            style={{
-              backgroundColor: "#722ed1",
-              color: "white",
-              border: "none",
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            My Profile
-          </button>
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function StaffDashboard() {
-  return (
-    <div style={{ textAlign: "center", padding: "48px 24px" }}>
-      <h1 style={{ color: "#fa541c", fontSize: "36px", marginBottom: "16px" }}>
-        Staff Dashboard
-      </h1>
-      <p style={{ fontSize: "18px", color: "#666", marginBottom: "32px" }}>
-        Access to staff-only features and booking management
-      </p>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "16px",
-          flexWrap: "wrap",
-        }}
-      >
-        <Link to="/booking-list">
-          <button
-            style={{
-              backgroundColor: "#fa541c",
-              color: "white",
-              border: "none",
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            Manage All Bookings
-          </button>
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function AdminPanel() {
-  return (
-    <div style={{ textAlign: "center", padding: "48px 24px" }}>
-      <h1 style={{ color: "#f5222d", fontSize: "36px", marginBottom: "16px" }}>
-        Admin Panel
-      </h1>
-      <p style={{ fontSize: "18px", color: "#666", marginBottom: "32px" }}>
-        Complete administrative control over the Wanderlust Travel platform
-      </p>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "16px",
-          flexWrap: "wrap",
-        }}
-      >
-        <Link to="/users-list">
-          <button
-            style={{
-              backgroundColor: "#f5222d",
-              color: "white",
-              border: "none",
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            Users Management
-          </button>
-        </Link>
-        <Link to="/booking-list">
-          <button
-            style={{
-              backgroundColor: "#fa541c",
-              color: "white",
-              border: "none",
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            All Bookings
-          </button>
-        </Link>
-      </div>
     </div>
   );
 }
@@ -413,14 +255,6 @@ function App() {
                 {/* User-specific links - only when logged in */}
                 {isLoggedIn && (
                   <>
-                    {/* Regular user dashboard - visible to all logged in users */}
-                    <Link
-                      to="/user-dashboard"
-                      style={{ color: "white", textDecoration: "none" }}
-                    >
-                      My Dashboard
-                    </Link>
-
                     {/* User profile - visible to all users */}
                     <Link
                       to="/profile"
@@ -449,12 +283,6 @@ function App() {
                     {isStaff() && (
                       <>
                         <Link
-                          to="/staff-dashboard"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Staff Dashboard
-                        </Link>
-                        <Link
                           to="/booking-list"
                           style={{ color: "white", textDecoration: "none" }}
                         >
@@ -466,12 +294,6 @@ function App() {
                     {/* Admin only features */}
                     {userRole === "admin" && (
                       <>
-                        <Link
-                          to="/admin-panel"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Admin Panel
-                        </Link>
                         <Link
                           to="/users-list"
                           style={{ color: "white", textDecoration: "none" }}
@@ -509,11 +331,6 @@ function App() {
             <Route path="/hotels/:hotelId" element={<HotelDetails />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            {/* User routes */}
-            <Route
-              path="/user-dashboard"
-              element={isLoggedIn ? <UserDashboard /> : <Login />}
-            />
             {/* User profile */}
             <Route
               path="/profile"
@@ -534,22 +351,10 @@ function App() {
               path="/my-favorites"
               element={isLoggedIn ? <FavoriteHotels /> : <Login />}
             />
-            {/* Staff routes (operator and admin) */}
-            <Route
-              path="/staff-dashboard"
-              element={isLoggedIn && isStaff() ? <StaffDashboard /> : <Login />}
-            />
             {/* Staff Booking Management route - only for staff */}
             <Route
               path="/booking-list"
               element={isLoggedIn && isStaff() ? <BookingList /> : <Login />}
-            />
-            {/* Admin-only routes */}
-            <Route
-              path="/admin-panel"
-              element={
-                isLoggedIn && userRole === "admin" ? <AdminPanel /> : <Login />
-              }
             />
             {/* Users Management - Admin only */}
             <Route
