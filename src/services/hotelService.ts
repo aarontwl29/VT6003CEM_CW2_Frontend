@@ -181,3 +181,46 @@ export const updateBookings = async (updateData: {
     throw error;
   }
 };
+
+// Function to get latest messages for booking IDs
+export const getLatestMessages = async (booking_ids: number[]) => {
+  try {
+    const token = getToken();
+    if (!token) {
+      throw new Error("User is not authenticated");
+    }
+
+    console.log("Fetching messages for booking IDs:", booking_ids);
+    console.log("Request URL:", `${api.uri}/msgs/bookings`);
+
+    const response = await axios.post(
+      `${api.uri}/msgs/bookings`,
+      { booking_ids },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Messages response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+
+    // Log detailed error information for debugging
+    if (error && typeof error === "object" && "response" in error) {
+      const axiosError = error as {
+        response?: { status?: number; data?: unknown; headers?: unknown };
+        config?: unknown;
+      };
+      console.error(
+        "Messages API - Response status:",
+        axiosError.response?.status
+      );
+      console.error("Messages API - Response data:", axiosError.response?.data);
+    }
+
+    throw error;
+  }
+};

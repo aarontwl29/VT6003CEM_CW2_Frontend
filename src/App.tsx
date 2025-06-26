@@ -7,6 +7,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound"; // Import the NotFound component
 import BookingList from "./components/BookingList";
+import BookingListUsers from "./components/BookingList_users";
 import TestingPage from "./components/TestingPage";
 import { isAuthenticated, logout, getUserRole } from "./services/authService";
 import "./App.css";
@@ -132,13 +133,23 @@ function App() {
                 <>
                   {/* Regular user dashboard - visible to all logged in users */}
                   <Link to="/user-dashboard">My Dashboard</Link>
+
+                  {/* User's own bookings - visible to all users */}
+                  <Link to="/my-bookings">My Bookings</Link>
+
+                  {/* Staff features - only for operators and admins */}
                   {isStaff() && (
-                    <Link to="/staff-dashboard">Staff Dashboard</Link>
+                    <>
+                      <Link to="/staff-dashboard">Staff Dashboard</Link>
+                      <Link to="/booking-list">Manage Bookings</Link>
+                    </>
                   )}
+
+                  {/* Admin only features */}
                   {userRole === "admin" && (
                     <Link to="/admin-panel">Admin Panel</Link>
                   )}
-                  <Link to="/booking-list">Booking List</Link>
+
                   <Link to="/" onClick={handleLogout}>
                     Logout
                   </Link>
@@ -161,10 +172,20 @@ function App() {
               path="/user-dashboard"
               element={isLoggedIn ? <UserDashboard /> : <Login />}
             />
+            {/* User's own bookings */}
+            <Route
+              path="/my-bookings"
+              element={isLoggedIn ? <BookingListUsers /> : <Login />}
+            />
             {/* Staff routes (operator and admin) */}
             <Route
               path="/staff-dashboard"
               element={isLoggedIn && isStaff() ? <StaffDashboard /> : <Login />}
+            />
+            {/* Staff Booking Management route - only for staff */}
+            <Route
+              path="/booking-list"
+              element={isLoggedIn && isStaff() ? <BookingList /> : <Login />}
             />
             {/* Admin-only routes */}
             <Route
@@ -173,8 +194,6 @@ function App() {
                 isLoggedIn && userRole === "admin" ? <AdminPanel /> : <Login />
               }
             />
-            {/* Booking List route */}
-            <Route path="/booking-list" element={<BookingList />} />
             {/* Test Bookings route */}
             <Route path="/test-bookings" element={<TestingPage />} />
             {/* 404 route */}
