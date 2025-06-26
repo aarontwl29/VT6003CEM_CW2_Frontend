@@ -9,8 +9,13 @@ import NotFound from "./components/NotFound"; // Import the NotFound component
 import BookingList from "./components/BookingList";
 import BookingListUsers from "./components/BookingList_users";
 import FavoriteHotels from "./components/FavoriteHotels";
+import UserProfile from "./components/UserProfile";
+import UserProfileEdit from "./components/UserProfileEdit";
+import UsersList from "./components/UsersList";
+import UserDetail from "./components/UserDetail";
 import TestingPage from "./components/TestingPage";
 import { isAuthenticated, logout, getUserRole } from "./services/authService";
+import bannerImage from "./assets/banner.png";
 import "./App.css";
 
 const { Header, Content, Footer } = Layout;
@@ -19,7 +24,96 @@ const { Header, Content, Footer } = Layout;
 export const AUTH_STATE_CHANGE_EVENT = "authStateChange";
 
 function Home() {
-  return <h1>Welcome to the Home Page</h1>;
+  return (
+    <div style={{ textAlign: "center" }}>
+      {/* Banner Image */}
+      <div style={{ marginBottom: "32px" }}>
+        <img
+          src={bannerImage}
+          alt="Wanderlust Travel Banner"
+          style={{
+            width: "100%",
+            maxHeight: "400px",
+            objectFit: "cover",
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          }}
+        />
+      </div>
+
+      {/* Welcome Content */}
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "24px" }}>
+        <h1
+          style={{
+            fontSize: "48px",
+            fontWeight: "bold",
+            color: "#1890ff",
+            marginBottom: "16px",
+            textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
+          Welcome to Wanderlust Travel
+        </h1>
+
+        <p
+          style={{
+            fontSize: "20px",
+            color: "#666",
+            lineHeight: "1.6",
+            marginBottom: "32px",
+          }}
+        >
+          Discover amazing destinations, book your dream hotels, and create
+          unforgettable memories with Wanderlust Travel. Your journey to
+          extraordinary experiences starts here.
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "16px",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link to="/search-hotels">
+            <button
+              style={{
+                backgroundColor: "#1890ff",
+                color: "white",
+                border: "none",
+                padding: "12px 24px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(24,144,255,0.3)",
+                transition: "all 0.3s ease",
+              }}
+            >
+              Start Your Journey
+            </button>
+          </Link>
+
+          <Link to="/register">
+            <button
+              style={{
+                backgroundColor: "white",
+                color: "#1890ff",
+                border: "2px solid #1890ff",
+                padding: "12px 24px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+            >
+              Join Wanderlust
+            </button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function SearchHotels() {
@@ -33,15 +127,159 @@ function SearchHotels() {
 
 // Simple role-specific pages
 function UserDashboard() {
-  return <h1>User Dashboard - Regular user features</h1>;
+  return (
+    <div style={{ textAlign: "center", padding: "48px 24px" }}>
+      <h1 style={{ color: "#1890ff", fontSize: "36px", marginBottom: "16px" }}>
+        Welcome to Your Dashboard
+      </h1>
+      <p style={{ fontSize: "18px", color: "#666", marginBottom: "32px" }}>
+        Manage your bookings, favorites, and profile from here
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "16px",
+          flexWrap: "wrap",
+        }}
+      >
+        <Link to="/my-bookings">
+          <button
+            style={{
+              backgroundColor: "#1890ff",
+              color: "white",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            My Bookings
+          </button>
+        </Link>
+        <Link to="/my-favorites">
+          <button
+            style={{
+              backgroundColor: "#52c41a",
+              color: "white",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            My Favorites
+          </button>
+        </Link>
+        <Link to="/profile">
+          <button
+            style={{
+              backgroundColor: "#722ed1",
+              color: "white",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            My Profile
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function StaffDashboard() {
-  return <h1>Staff Dashboard - Common features for operators and admins</h1>;
+  return (
+    <div style={{ textAlign: "center", padding: "48px 24px" }}>
+      <h1 style={{ color: "#fa541c", fontSize: "36px", marginBottom: "16px" }}>
+        Staff Dashboard
+      </h1>
+      <p style={{ fontSize: "18px", color: "#666", marginBottom: "32px" }}>
+        Access to staff-only features and booking management
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "16px",
+          flexWrap: "wrap",
+        }}
+      >
+        <Link to="/booking-list">
+          <button
+            style={{
+              backgroundColor: "#fa541c",
+              color: "white",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            Manage All Bookings
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function AdminPanel() {
-  return <h1>Admin Panel - Admin only features</h1>;
+  return (
+    <div style={{ textAlign: "center", padding: "48px 24px" }}>
+      <h1 style={{ color: "#f5222d", fontSize: "36px", marginBottom: "16px" }}>
+        Admin Panel
+      </h1>
+      <p style={{ fontSize: "18px", color: "#666", marginBottom: "32px" }}>
+        Complete administrative control over the Wanderlust Travel platform
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "16px",
+          flexWrap: "wrap",
+        }}
+      >
+        <Link to="/users-list">
+          <button
+            style={{
+              backgroundColor: "#f5222d",
+              color: "white",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            Users Management
+          </button>
+        </Link>
+        <Link to="/booking-list">
+          <button
+            style={{
+              backgroundColor: "#fa541c",
+              color: "white",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            All Bookings
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function App() {
@@ -114,53 +352,153 @@ function App() {
   return (
     <Router>
       <Layout>
-        <Header>
-          <nav>
-            <Space size="middle">
-              {/* Public links - always visible */}
-              <Link to="/">Home</Link>
-              <Link to="/search-hotels">Search Hotels</Link>
+        <Header
+          style={{
+            backgroundColor: "#1890ff",
+            padding: "0 24px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            {/* Company Logo/Name */}
+            <Link
+              to="/"
+              style={{
+                color: "white",
+                fontSize: "24px",
+                fontWeight: "bold",
+                textDecoration: "none",
+              }}
+            >
+              🌍 Wanderlust Travel
+            </Link>
+            <nav>
+              <Space size="middle">
+                {/* Public links - always visible */}
+                <Link to="/" style={{ color: "white", textDecoration: "none" }}>
+                  Home
+                </Link>
+                <Link
+                  to="/search-hotels"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  Search Hotels
+                </Link>
 
-              {/* Show these links only when logged out */}
-              {!isLoggedIn && (
-                <>
-                  <Link to="/register">Register</Link>
-                  <Link to="/login">Login</Link>
-                </>
-              )}
+                {/* Show these links only when logged out */}
+                {!isLoggedIn && (
+                  <>
+                    <Link
+                      to="/register"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      Register
+                    </Link>
+                    <Link
+                      to="/login"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      Login
+                    </Link>
+                  </>
+                )}
 
-              {/* User-specific links - only when logged in */}
-              {isLoggedIn && (
-                <>
-                  {/* Regular user dashboard - visible to all logged in users */}
-                  <Link to="/user-dashboard">My Dashboard</Link>
+                {/* User-specific links - only when logged in */}
+                {isLoggedIn && (
+                  <>
+                    {/* Regular user dashboard - visible to all logged in users */}
+                    <Link
+                      to="/user-dashboard"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      My Dashboard
+                    </Link>
 
-                  {/* User's own bookings - visible to all users */}
-                  <Link to="/my-bookings">My Bookings</Link>
-                  
-                  {/* User's favorite hotels - visible to all users */}
-                  <Link to="/my-favorites">My Favorites</Link>
+                    {/* User profile - visible to all users */}
+                    <Link
+                      to="/profile"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      My Profile
+                    </Link>
 
-                  {/* Staff features - only for operators and admins */}
-                  {isStaff() && (
-                    <>
-                      <Link to="/staff-dashboard">Staff Dashboard</Link>
-                      <Link to="/booking-list">Manage Bookings</Link>
-                    </>
-                  )}
+                    {/* User's own bookings - visible to all users */}
+                    <Link
+                      to="/my-bookings"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      My Bookings
+                    </Link>
 
-                  {/* Admin only features */}
-                  {userRole === "admin" && (
-                    <Link to="/admin-panel">Admin Panel</Link>
-                  )}
+                    {/* User's favorite hotels - visible to all users */}
+                    <Link
+                      to="/my-favorites"
+                      style={{ color: "white", textDecoration: "none" }}
+                    >
+                      My Favorites
+                    </Link>
 
-                  <Link to="/" onClick={handleLogout}>
-                    Logout
-                  </Link>
-                </>
-              )}
-            </Space>
-          </nav>
+                    {/* Staff features - only for operators and admins */}
+                    {isStaff() && (
+                      <>
+                        <Link
+                          to="/staff-dashboard"
+                          style={{ color: "white", textDecoration: "none" }}
+                        >
+                          Staff Dashboard
+                        </Link>
+                        <Link
+                          to="/booking-list"
+                          style={{ color: "white", textDecoration: "none" }}
+                        >
+                          Manage Bookings
+                        </Link>
+                      </>
+                    )}
+
+                    {/* Admin only features */}
+                    {userRole === "admin" && (
+                      <>
+                        <Link
+                          to="/admin-panel"
+                          style={{ color: "white", textDecoration: "none" }}
+                        >
+                          Admin Panel
+                        </Link>
+                        <Link
+                          to="/users-list"
+                          style={{ color: "white", textDecoration: "none" }}
+                        >
+                          Users Management
+                        </Link>
+                      </>
+                    )}
+
+                    <Link
+                      to="/"
+                      onClick={handleLogout}
+                      style={{
+                        color: "white",
+                        textDecoration: "none",
+                        backgroundColor: "rgba(255,255,255,0.2)",
+                        padding: "4px 12px",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      Logout
+                    </Link>
+                  </>
+                )}
+              </Space>
+            </nav>
+          </div>
         </Header>
 
         <Content style={{ padding: "50px", minHeight: "80vh" }}>
@@ -175,6 +513,16 @@ function App() {
             <Route
               path="/user-dashboard"
               element={isLoggedIn ? <UserDashboard /> : <Login />}
+            />
+            {/* User profile */}
+            <Route
+              path="/profile"
+              element={isLoggedIn ? <UserProfile /> : <Login />}
+            />
+            {/* User profile edit */}
+            <Route
+              path="/profile/edit"
+              element={isLoggedIn ? <UserProfileEdit /> : <Login />}
             />
             {/* User's own bookings */}
             <Route
@@ -203,6 +551,20 @@ function App() {
                 isLoggedIn && userRole === "admin" ? <AdminPanel /> : <Login />
               }
             />
+            {/* Users Management - Admin only */}
+            <Route
+              path="/users-list"
+              element={
+                isLoggedIn && userRole === "admin" ? <UsersList /> : <Login />
+              }
+            />
+            {/* User Detail - Admin only */}
+            <Route
+              path="/admin/users/:userId"
+              element={
+                isLoggedIn && userRole === "admin" ? <UserDetail /> : <Login />
+              }
+            />
             {/* Test Bookings route */}
             <Route path="/test-bookings" element={<TestingPage />} />
             {/* 404 route */}
@@ -211,8 +573,16 @@ function App() {
           </Routes>
         </Content>
 
-        <Footer>
-          <p>VT6003CEM Demo</p>
+        <Footer
+          style={{
+            textAlign: "center",
+            backgroundColor: "#f0f2f5",
+            borderTop: "1px solid #d9d9d9",
+          }}
+        >
+          <p style={{ margin: 0, color: "#666" }}>
+            © 2025 Wanderlust Travel - Your Journey Begins Here 🌍
+          </p>
         </Footer>
       </Layout>
     </Router>
