@@ -8,6 +8,7 @@ import { HeartOutlined, HeartFilled } from "@ant-design/icons"; // Import heart 
 import { UserOutlined } from "@ant-design/icons"; // Import person icon
 import { isAuthenticated, getCurrentUser } from "../services/authService";
 import { createBooking } from "../services/hotelService";
+import { addFavorite, removeFavorite, isFavorite } from "../services/favsService";
 
 interface Room {
   id: number;
@@ -58,6 +59,17 @@ const HotelDetails: React.FC = () => {
           `${api.uri}/hotels/${hotelId}/rooms`
         );
         setRooms(roomsResponse.data);
+
+        // Check if this hotel is in user's favorites (only if authenticated)
+        if (isAuthenticated() && hotelId) {
+          try {
+            const favoriteStatus = await isFavorite(parseInt(hotelId));
+            setIsFavourite(favoriteStatus);
+          } catch (error) {
+            console.error("Error checking favorite status:", error);
+            // Don't set error state, just keep default false
+          }
+        }
       } catch (error) {
         console.error("Error fetching hotel or room data:", error);
         setHotel(null);
@@ -70,8 +82,37 @@ const HotelDetails: React.FC = () => {
     fetchHotelDetails();
   }, [hotelId]);
 
-  const toggleFavourite = () => {
-    setIsFavourite((prev) => !prev);
+  const toggleFavourite = async () => {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      message.warning("Please log in to manage favorites.");
+      navigate("/login");
+      return;
+    }
+
+    if (!hotelId || !hotel) {
+      message.error("Hotel information not available.");
+      return;
+    }
+
+    try {
+      const hotelIdNum = parseInt(hotelId);
+      
+      if (isFavourite) {
+        // Remove from favorites
+        await removeFavorite(hotelIdNum);
+        setIsFavourite(false);
+        message.success(`${hotel.name} removed from favorites!`);
+      } else {
+        // Add to favorites
+        await addFavorite(hotelIdNum);
+        setIsFavourite(true);
+        message.success(`${hotel.name} added to favorites!`);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      message.error(error instanceof Error ? error.message : "Failed to update favorites. Please try again.");
+    }
   };
 
   const handleRoomSelection = (roomId: number) => {

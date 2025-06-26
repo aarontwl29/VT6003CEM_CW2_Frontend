@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import NotFound from "./components/NotFound"; // Import the NotFound component
 import BookingList from "./components/BookingList";
 import BookingListUsers from "./components/BookingList_users";
+import FavoriteHotels from "./components/FavoriteHotels";
 import TestingPage from "./components/TestingPage";
 import { isAuthenticated, logout, getUserRole } from "./services/authService";
 import "./App.css";
@@ -136,6 +137,9 @@ function App() {
 
                   {/* User's own bookings - visible to all users */}
                   <Link to="/my-bookings">My Bookings</Link>
+                  
+                  {/* User's favorite hotels - visible to all users */}
+                  <Link to="/my-favorites">My Favorites</Link>
 
                   {/* Staff features - only for operators and admins */}
                   {isStaff() && (
@@ -176,6 +180,11 @@ function App() {
             <Route
               path="/my-bookings"
               element={isLoggedIn ? <BookingListUsers /> : <Login />}
+            />
+            {/* User's favorite hotels */}
+            <Route
+              path="/my-favorites"
+              element={isLoggedIn ? <FavoriteHotels /> : <Login />}
             />
             {/* Staff routes (operator and admin) */}
             <Route
